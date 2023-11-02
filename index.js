@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { createObjectCsvWriter } = require("csv-writer");
 
 function getFolderCapacity(dir) {
   if (!dir)
@@ -103,4 +104,25 @@ function formatSize(sizeInBytes) {
   }
 }
 
-const myFormated = folders();
+const formattedData = folders();
+
+function writeToCSV() {
+  const csvWriter = createObjectCsvWriter({
+    path: "folder_sizes.csv", // The path to the CSV file
+    header: [
+      { id: "name", title: "Name" },
+      { id: "size", title: "Size" },
+    ],
+  });
+
+  csvWriter
+    .writeRecords(formattedData)
+    .then(() => {
+      console.log("CSV file has been written.");
+    })
+    .catch((err) => {
+      console.error("Error writing the CSV file:", err);
+    });
+}
+
+writeToCSV();
