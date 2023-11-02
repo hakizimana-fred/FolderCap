@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { createObjectCsvWriter } = require("csv-writer");
 
+const dirPath = process.argv[2];
+
 function getFolderCapacity(dir) {
   if (!dir)
     return {
@@ -70,9 +72,7 @@ function listTopFolders(dir) {
   return folderCapacities.slice(0, 10);
 }
 
-const directoryInfo = getFolderCapacityInfo(
-  "/home/ngeni_fred/Development/Reactjs"
-);
+const directoryInfo = getFolderCapacityInfo(dirPath);
 
 if (directoryInfo.error) {
   console.error(directoryInfo.error);
@@ -81,7 +81,7 @@ if (directoryInfo.error) {
 }
 
 function folders() {
-  const foldersDir = listTopFolders("/home/ngeni_fred/Development/Reactjs");
+  const foldersDir = listTopFolders(dirPath);
   let formatedFolders = [];
   for (const top of foldersDir) {
     const folderInfo = {};
