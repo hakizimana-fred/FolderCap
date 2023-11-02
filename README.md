@@ -13,4 +13,4 @@ This Node.js script calculates the total capacity of a directory, including its 
 4. Run the script by providing the path to the directory you want to analyze:
 
    ```bash
-   node index.js
+   node index.js /path/to/folders
