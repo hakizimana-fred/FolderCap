@@ -50,10 +50,57 @@ function getFolderCapacityInfo(dir) {
   };
 }
 
-const directoryInfo = getFolderCapacityInfo("");
+function listTopFolders(dir) {
+  const folderCapacities = [];
+
+  const files = fs.readdirSync(dir);
+
+  for (const file of files) {
+    const folderPath = path.join(dir, file);
+
+    if (fs.statSync(folderPath).isDirectory()) {
+      const capacity = getFolderCapacity(folderPath);
+      folderCapacities.push({ name: file, capacity });
+    }
+  }
+
+  folderCapacities.sort((a, b) => b.capacity - a.capacity);
+
+  return folderCapacities.slice(0, 10);
+}
+
+const directoryInfo = getFolderCapacityInfo(
+  "/home/ngeni_fred/Development/Reactjs"
+);
 
 if (directoryInfo.error) {
   console.error(directoryInfo.error);
 } else {
   console.log(`directory info is ${JSON.stringify(directoryInfo)}`);
 }
+
+function folders() {
+  const foldersDir = listTopFolders("/home/ngeni_fred/Development/Reactjs");
+  let formatedFolders = [];
+  for (const top of foldersDir) {
+    const folderInfo = {};
+    folderInfo.size = formatSize(top.capacity);
+    folderInfo.name = top.name;
+    formatedFolders.push(folderInfo);
+  }
+  return formatedFolders;
+}
+
+function formatSize(sizeInBytes) {
+  if (sizeInBytes >= 1024 * 1024) {
+    const sizeInMB = sizeInBytes / (1024 * 1024);
+    return sizeInMB.toFixed(2) + " MB";
+  } else if (sizeInBytes >= 1024) {
+    const sizeInKB = sizeInBytes / 1024;
+    return sizeInKB.toFixed(2) + " KB";
+  } else {
+    return sizeInBytes + " bytes";
+  }
+}
+
+const myFormated = folders();
